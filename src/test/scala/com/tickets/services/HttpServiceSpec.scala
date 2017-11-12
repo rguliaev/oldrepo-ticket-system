@@ -8,18 +8,17 @@ import akka.testkit.TestKit
 import com.tickets.server.StateResponse
 import com.tickets.services.http.HttpService
 import com.tickets.{Common, TicketConfig, TicketConfigLoader}
-import com.tickets.services.imdb.ImdbService
+import com.tickets.services.cinema.CinemaService
 import org.scalatest.{Matchers, WordSpec}
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
-
 import scala.concurrent.duration._
 
 class HttpServiceSpec extends WordSpec with Matchers with ScalatestRouteTest with TicketConfigLoader with Common {
 
   val config: TicketConfig = loadConfig.get
-  val imbdActor: ActorRef = system.actorOf(Props(new ImdbService(config.imdb)))
-  val service = new HttpService(imbdActor)
+  val cinemaService: ActorRef = system.actorOf(Props(new CinemaService(config.imdb)))
+  val service = new HttpService(cinemaService)
 
   override def afterAll(): Unit = {
     Http.get(system).shutdownAllConnectionPools().onComplete(_ => TestKit.shutdownActorSystem(system))

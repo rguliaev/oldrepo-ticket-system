@@ -4,9 +4,10 @@ import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import com.tickets.services.http.HttpService
-import com.tickets.services.imdb.ImdbService
+import com.tickets.services.cinema.CinemaService
 import com.typesafe.config.ConfigFactory
 import org.slf4j.{Logger, LoggerFactory}
+
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
@@ -18,7 +19,7 @@ object Application extends App with TicketConfigLoader with Logging {
 
   loadConfig match {
     case Success(config) =>
-      val imdbService: ActorRef = system.actorOf(Props(new ImdbService(config.imdb)))
+      val imdbService: ActorRef = system.actorOf(Props(new CinemaService(config.imdb)))
       val router = new HttpService(imdbService)
       val bindingFuture = Http().bindAndHandle(router.route, config.server.host, config.server.port)
       log.info("Ticket service has been started ...")

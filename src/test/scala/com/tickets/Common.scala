@@ -3,10 +3,7 @@ package com.tickets
 import com.tickets.server.{RegisterRequest, ReserveRequest, StateRequest, StateResponse}
 
 trait Common {
-
-
-
-  val totalSeats = 3
+  val totalSeats = 100
   val fclubId = "tt0137523"
   val screenId1 = "screen1_123456"
   val screenId2 = "screen2_123456"

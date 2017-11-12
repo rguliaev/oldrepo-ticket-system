@@ -17,13 +17,13 @@ class HttpService(imdbService: ActorRef)(implicit executionContext: ExecutionCon
 
   implicit val timeout: Timeout = Timeout(5.seconds)
 
-  private def processRequest[T <: TicketRequest](implicit um: FromRequestUnmarshaller[T]): Route =
+  private def processRequest[T <: CinemaRequest](implicit um: FromRequestUnmarshaller[T]): Route =
     entity(as[T]) { request =>
       if (request.validate) run(request) else complete((400, "Invalid validation"))
     }
 
-  private def run[T <: TicketRequest](data: T) = {
-    val future = (imdbService ? data).mapTo[TicketResponse] recover { case ex =>
+  private def run[T <: CinemaRequest](data: T) = {
+    val future = (imdbService ? data).mapTo[CinemaResponse] recover { case ex =>
       log.error(ex.getMessage)
       ErrorResponse("Something went wrong")
     }
